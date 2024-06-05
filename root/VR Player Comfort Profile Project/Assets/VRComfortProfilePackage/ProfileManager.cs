@@ -18,8 +18,11 @@ public class ProfileManager
         }
     }
 
-    private (float, float, float) m_profileVersion = (1f, 0f, 0f);
-    public (float, float, float) ProfileVersion
+
+
+    // 6/5/24 : New Version, bumping to 1.1.0
+    private Version m_profileVersion = new Version(1, 1, 0);
+    public Version ProfileVersion
     {
         get => m_profileVersion;
     }
@@ -61,9 +64,25 @@ public class ProfileManager
         return null;
     }
 
-    public ScriptableObject ParseProfileToScriptableObject(string ProfilePath)
+    public void ParseProfile(string ProfilePath)
     {
-        return null;
+        try
+        {
+            //read text
+            string jsonData = File.ReadAllText(ProfilePath);
+            //deserialize
+            VRPlayerComfortProfile profile = JsonConvert.DeserializeObject<VRPlayerComfortProfile>(jsonData);
+            //save in the instanced profile for access  
+            InstancedProfile instance = GameObject.FindObjectOfType<InstancedProfile>();
+            if (instance != null)
+            {
+                instance.SelectedProfile = profile;
+            }
+        }
+        catch (IOException e)
+        {
+            Debug.LogError("Error creating profile: " + e.Message);
+        }
     }
 
     public static List<string> GetFilesInFolder(string folderPath)

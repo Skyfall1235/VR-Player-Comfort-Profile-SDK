@@ -1,7 +1,12 @@
 {
-  "profileID": "0bcd5f8f-2880-408c-bef6-52305e690166",
+  "ProfileVersion": {
+    "Major": 1,
+    "Minor": 1,
+    "SubMinor": 0
+  },
+  "ProfileID": "3d7258cb-1ff5-45f4-8329-4883423456e5",
   "ProfileName": "Test1",
-  "movement": {
+  "MovementData": {
     "turnStyle": 1,
     "turnDegrees": 15.0,
     "turnDegreePerSecond": 30.0,
@@ -14,13 +19,13 @@
       "Item4": 1.0
     }
   },
-  "visuals": {
+  "VisualData": {
     "UseVignette": true,
     "VignetteIntensity": 1.0,
     "minimumSizeFont": 10.0,
     "maximumSizeFont": 24.0
   },
-  "other": {
+  "OtherData": {
     "ShowSubtitles": false,
     "HapticFeedbackIntensity": 1.0
   }
