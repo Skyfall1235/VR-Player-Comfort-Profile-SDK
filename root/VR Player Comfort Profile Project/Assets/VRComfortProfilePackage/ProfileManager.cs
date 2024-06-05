@@ -34,7 +34,7 @@ public class ProfileManager
     /// <param name="nameOfProfile">The name of the profile to be created.</param>
     public void CreateProfile(string nameOfProfile)
     {
-        CreateProfile(nameOfProfile);
+        CreateProfile(nameOfProfile, null, null, null);
     }
 
     /// <summary>
@@ -59,21 +59,18 @@ public class ProfileManager
         VRPlayerComfortProfile newProfile = new(m_profileVersion, nameOfProfile, savedMovement, savedVisuals, savedOther);
         try
         {
-
-            string filePath = Path.Combine(m_profileFolderPath, nameOfProfile + ".json");
-
-            //if we try to generate a profile with the same name, create a new version add add a (#) next to it to denote a new version
-            if (System.IO.File.Exists(filePath))
+            string fileName;
+            Debug.Log(nameOfProfile);
+            if (File.Exists(m_profileFolderPath + "/" + nameOfProfile + ".json"))
             {
-                int counter = 1;
-                while (System.IO.File.Exists(filePath))
-                {
-                    nameOfProfile = $"{nameOfProfile}({counter})";
-                    filePath = Path.Combine(m_profileFolderPath, nameOfProfile + ".json");
-                    counter++;
-                }
+                fileName = GetNextFilename(nameOfProfile, m_profileFolderPath);
+                Debug.Log(fileName);
             }
-
+            else
+            {
+                fileName = nameOfProfile + ".json";
+            }
+            string filePath = Path.Combine(m_profileFolderPath, fileName);
             //now, write the data to a json file
             using (StreamWriter writer = new StreamWriter(filePath))
             {
@@ -138,6 +135,20 @@ public class ProfileManager
             Console.WriteLine($"Error: Folder not found at {folderPath}");
             return new List<string>();
         }
+    }
+
+    private string GetNextFilename(string filename, string filePath)
+    {
+        int counter = 1;
+        string newFilename = filename + " ({0})";  // Use newFilename to avoid confusion
+
+        while (File.Exists(Path.Combine(filePath, string.Format(newFilename, counter) + ".json")))
+        {
+            counter++;
+            Debug.Log(newFilename);
+        }
+
+        return Path.Combine(filePath, string.Format(newFilename, counter) + ".json");
     }
 }
 
