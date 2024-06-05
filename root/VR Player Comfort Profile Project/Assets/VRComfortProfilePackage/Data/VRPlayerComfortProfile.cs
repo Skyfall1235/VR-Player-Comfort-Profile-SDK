@@ -165,7 +165,39 @@ public class VRPlayerComfortProfile
         /// <summary>
         /// Controls the intensity of the vignette effect (0.0 to 1.0).
         /// </summary>
-        public float VignetteIntensity;
+        private float m_vignetteIntensity;
+        public float VignetteIntensity
+        {
+            get
+            {
+                return m_vignetteIntensity;
+            }
+            set
+            {
+                m_vignetteIntensity = Mathf.Clamp01(value);
+            }
+        }
+
+        /// <summary>
+        /// Radius around the center of vision that is not blocked by the vignette.
+        /// </summary>
+        public float VignetteRadius;
+
+        private float m_vignetteSensitivity;
+        /// <summary>
+        /// How sensitive the vignette is to movement (0.0 to 1.0).
+        /// </summary>
+        public float VignetteSensitivity
+        {
+            get
+            {
+                return m_vignetteSensitivity;
+            }
+            set
+            {
+                m_vignetteSensitivity = Mathf.Clamp01(value);
+            }
+        }
 
         /// <summary>
         /// Minimum allowed font size for UI elements.
@@ -182,12 +214,16 @@ public class VRPlayerComfortProfile
         /// </summary>
         /// <param name="useVignette">Enable (true) or disable (false) the vignette effect.</param>
         /// <param name="vignetteIntensity">Intensity of the vignette effect (0.0 to 1.0).</param>
+        /// <param name="vignetteRadius">Radius around the center of vision that is not blocked by the vignette.</param>
+        /// <param name="vignetteSensitivity">How sensitive the vignette is to movement.</param>
         /// <param name="minimumSizeFont">Minimum allowed font size for UI elements.</param>
         /// <param name="maximumSizeFont">Maximum allowed font size for UI elements.</param>
-        public Visuals(bool useVignette, float vignetteIntensity, float minimumSizeFont, float maximumSizeFont)
+        public Visuals(bool useVignette, float vignetteIntensity, float vignetteRadius, float vignetteSensitivity, float minimumSizeFont, float maximumSizeFont)
         {
-            UseVignette = useVignette;
-            VignetteIntensity = vignetteIntensity;
+            this.UseVignette = useVignette;
+            this.VignetteIntensity = vignetteIntensity;
+            this.VignetteRadius = vignetteRadius;
+            this.VignetteSensitivity = Mathf.Clamp01(vignetteSensitivity);
             this.minimumSizeFont = minimumSizeFont;
             this.maximumSizeFont = maximumSizeFont;
         }
@@ -197,8 +233,10 @@ public class VRPlayerComfortProfile
         /// </summary>
         public Visuals()
         {
-            UseVignette = true;
-            VignetteIntensity = 1f;
+            this.UseVignette = true;
+            this.VignetteIntensity = 1f;
+            this.VignetteRadius = 0;
+            this.VignetteSensitivity = 0;
             this.minimumSizeFont = 10;
             this.maximumSizeFont = 24;
         }
@@ -221,14 +259,26 @@ public class VRPlayerComfortProfile
         public float HapticFeedbackIntensity;
 
         /// <summary>
+        /// Enables or disables The ability to toggle Grab actions instead of hold to grab actions.
+        /// </summary>
+        public bool ToggleGrip;
+
+        /// <summary>
+        /// When enabled, swaps the trigger and grip inputs (normally used as an accessibility option).
+        /// </summary>
+        public bool SwapTriggerAndGrip;
+
+        /// <summary>
         /// Constructor for the Other class, allowing specific settings for miscellaneous options.
         /// </summary>
         /// <param name="showSubtitles">Enable (true) or disable (false) subtitles.</param>
         /// <param name="hapticFeedbackIntensity">Intensity of haptic feedback in VR controllers (0.0 to 1.0).</param>
-        public Other(bool showSubtitles, float hapticFeedbackIntensity)
+        public Other(bool showSubtitles, float hapticFeedbackIntensity, bool toggleGrip, bool swapTriggerAndGrip)
         {
-            ShowSubtitles = showSubtitles;
-            HapticFeedbackIntensity = hapticFeedbackIntensity;
+            this.ShowSubtitles = showSubtitles;
+            this.HapticFeedbackIntensity = hapticFeedbackIntensity;
+            this.ToggleGrip = toggleGrip;
+            this.SwapTriggerAndGrip = swapTriggerAndGrip;
         }
 
         /// <summary>
@@ -236,8 +286,10 @@ public class VRPlayerComfortProfile
         /// </summary>
         public Other()
         {
-            ShowSubtitles = false;
-            HapticFeedbackIntensity = 1f;
+            this.ShowSubtitles = false;
+            this.HapticFeedbackIntensity = 1f;
+            this.ToggleGrip = false;
+            this.SwapTriggerAndGrip = false;
         }
     }
 
@@ -249,10 +301,10 @@ public class VRPlayerComfortProfile
     /// <param name="movement">An instance of the Movement class containing movement and turning settings.</param>
     /// <param name="visuals">An instance of the Visuals class containing visual appearance settings.</param>
     /// <param name="other">An instance of the Other class containing miscellaneous settings.</param>
-    public VRPlayerComfortProfile(Version profileVersion = default, string ProfileName = "", Guid profileID = default, Movement movement = null, Visuals visuals = null, Other other = null)
+    public VRPlayerComfortProfile(Version profileVersion = default, string ProfileName = "", Movement movement = null, Visuals visuals = null, Other other = null)
     {
-        this.m_profileVersion = profileVersion;
-        this.m_profileID = profileID == Guid.Empty ? Guid.NewGuid() : profileID; // Generate a new Guid if not provided
+        this.m_profileVersion = profileVersion; //version is passed so we can update future items
+        this.m_profileID = Guid.NewGuid(); //generate a new GUID
         this.m_profileName = ProfileName; //name is required
         this.m_movement = movement ?? new Movement(); // Use default Movement if not provided
         this.m_visuals = visuals ?? new Visuals(); // Use default Visuals if not provided

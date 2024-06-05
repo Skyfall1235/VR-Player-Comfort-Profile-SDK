@@ -27,29 +27,57 @@ public class ProfileManager
         get => m_profileVersion;
     }
 
+    /// <summary>
+    /// This method appears to be redundant and calls the overloaded version with the same parameter.
+    /// Consider removing this overload.
+    /// </summary>
+    /// <param name="nameOfProfile">The name of the profile to be created.</param>
     public void CreateProfile(string nameOfProfile)
     {
+        CreateProfile(nameOfProfile);
+    }
+
+    /// <summary>
+    /// Creates a new VR player comfort profile with the specified name and settings.
+    /// </summary>
+    /// <param name="nameOfProfile">The name of the profile to be created.</param>
+    /// <param name="profile">A VRPlayerComfortProfile object containing the desired settings.</param>
+    public void CreateProfile(string nameOfProfile, VRPlayerComfortProfile profile)
+    {
+        CreateProfile(nameOfProfile, profile.MovementData, profile.VisualData, profile.OtherData);
+    }
+
+    /// <summary>
+    /// Creates a new VR player comfort profile with the specified name and optional settings.
+    /// </summary>
+    /// <param name="nameOfProfile">The name of the profile to be created.</param>
+    /// <param name="savedMovement">Optional movement settings for the profile (VRPlayerComfortProfile.Movement).</param>
+    /// <param name="savedVisuals">Optional visual settings for the profile (VRPlayerComfortProfile.Visuals).</param>
+    /// <param name="savedOther">Optional other settings for the profile (VRPlayerComfortProfile.Other).</param>
+    public void CreateProfile(string nameOfProfile, VRPlayerComfortProfile.Movement savedMovement = null, VRPlayerComfortProfile.Visuals savedVisuals = null, VRPlayerComfortProfile.Other savedOther = null)
+    {
+        VRPlayerComfortProfile newProfile = new(m_profileVersion, nameOfProfile, savedMovement, savedVisuals, savedOther);
         try
         {
-            // Existing code for creating the VRPlayerComfortProfile object
-
             string filePath = Path.Combine(m_profileFolderPath, nameOfProfile + ".json");
 
             using (StreamWriter writer = new StreamWriter(filePath))
             {
-                VRPlayerComfortProfile newProfile = new(m_profileVersion, nameOfProfile);
+                //write data to json
                 string jsonData = JsonConvert.SerializeObject(newProfile, Formatting.Indented);
                 writer.Write(jsonData);
                 writer.Close();
+                //logging just in case
                 Debug.Log($"Created profile at {filePath}");
             }
         }
+        //gotta have error handling
         catch (IOException e)
         {
             Debug.LogError("Error creating profile: " + e.Message);
-            // Handle the error gracefully (e.g., display a message to the user)
         }
     }
+
     public List<string> RetrieveAllProfilesOnDevice()
     {
         List<string> ProfileFilePaths = new List<string>();
