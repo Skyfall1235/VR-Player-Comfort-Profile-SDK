@@ -1,0 +1,27 @@
+{
+  "profileID": "0bcd5f8f-2880-408c-bef6-52305e690166",
+  "ProfileName": "Test1",
+  "movement": {
+    "turnStyle": 1,
+    "turnDegrees": 15.0,
+    "turnDegreePerSecond": 30.0,
+    "locomotionStyle": 1,
+    "movementDirectionSource": 2,
+    "TeleportationArcColor": {
+      "Item1": 1.0,
+      "Item2": 1.0,
+      "Item3": 1.0,
+      "Item4": 1.0
+    }
+  },
+  "visuals": {
+    "UseVignette": true,
+    "VignetteIntensity": 1.0,
+    "minimumSizeFont": 10.0,
+    "maximumSizeFont": 24.0
+  },
+  "other": {
+    "ShowSubtitles": false,
+    "HapticFeedbackIntensity": 1.0
+  }
+}
