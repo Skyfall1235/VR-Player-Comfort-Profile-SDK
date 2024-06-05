@@ -1,114 +1,48 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System.IO;
-using Newtonsoft.Json;
-using System.Linq;
-
-[System.Serializable]
-
-public class ProfileManager
-{
-    [SerializeField]
-    private string m_profileFolderPath = Application.streamingAssetsPath;
-    public string ProfileFolderPath
-    {
-        get
-        {
-            return m_profileFolderPath;
-        }
-    }
-
-    private (float, float, float) m_profileVersion = (1f, 0f, 0f);
-    public (float, float, float) ProfileVersion
-    {
-        get => m_profileVersion;
-    }
-
-    public void CreateProfile(string nameOfProfile)
-    {
-        try
-        {
-            // Existing code for creating the VRPlayerComfortProfile object
-
-            string filePath = Path.Combine(m_profileFolderPath, nameOfProfile + ".json");
-
-            using (StreamWriter writer = new StreamWriter(filePath))
-            {
-                VRPlayerComfortProfile newProfile = new(m_profileVersion, nameOfProfile);
-                string jsonData = JsonConvert.SerializeObject(newProfile, Formatting.Indented);
-                writer.Write(jsonData);
-                writer.Close();
-                Debug.Log($"Created profile at {filePath}");
-            }
-        }
-        catch (IOException e)
-        {
-            Debug.LogError("Error creating profile: " + e.Message);
-            // Handle the error gracefully (e.g., display a message to the user)
-        }
-    }
-    public List<string> RetrieveAllProfilesOnDevice()
-    {
-        List<string> ProfileFilePaths = new List<string>();
-        ProfileFilePaths = GetFilesInFolder(m_profileFolderPath);
-        //come back to this later and confirm it
-        return ProfileFilePaths;
-    }
-
-
-
-
-    public static List<string> GetFilesInFolder(string folderPath)
-    {
-        if (Directory.Exists(folderPath))
-        {
-            return Directory.GetFiles(folderPath).ToList();
-        }
-        else
-        {
-            Console.WriteLine($"Error: Folder not found at {folderPath}");
-            return new List<string>();
-        }
-    }
-}
 
 public class VRPlayerComfortProfile
 {
     /// <summary>
     /// (Private) The profile version (major, minor, patch). Defaults to (1.0, 0.0, 0.0) in case of failure.
     /// </summary>
+    [SerializeField]
     private (float, float, float) m_profileVersion = (1f, 0f, 0f);
 
     /// <summary>
     /// A unique identifier for the profile.
     /// </summary>
+    [SerializeField]
     public Guid profileID;
 
     /// <summary>
     /// A custom Name for the Profile.
     /// </summary>
+    [SerializeField]
     public string ProfileName;
 
     /// <summary>
     /// An instance of the <see cref="Movement"/> class, containing settings related to movement and turning.
     /// </summary>
+    [SerializeField]
     public Movement movement;
 
     /// <summary>
     /// An instance of the <see cref="Visuals"/> class, containing settings related to visual appearance.
     /// </summary>
+    [SerializeField]
     public Visuals visuals;
 
     /// <summary>
     /// An instance of the <see cref="Other"/> class, containing miscellaneous settings.
     /// </summary>
+    [SerializeField]
     public Other other;
 
     /// <summary>
     /// Nested class representing movement and turning settings within a VR Player Comfort Profile.
     /// </summary>
+    [System.Serializable]
     public class Movement
     {
         /// <summary>
@@ -177,6 +111,7 @@ public class VRPlayerComfortProfile
     /// <summary>
     /// Nested class representing visual appearance settings within a VR Player Comfort Profile.
     /// </summary>
+    [System.Serializable]
     public class Visuals
     {
         /// <summary>
@@ -229,6 +164,7 @@ public class VRPlayerComfortProfile
     /// <summary>
     /// Nested class representing miscellaneous settings within a VR Player Comfort Profile.
     /// </summary>
+    [System.Serializable]
     public class Other
     {
         /// <summary>
@@ -300,6 +236,7 @@ public class VRPlayerComfortProfile
 /// <summary>
 /// Defines options for the user's turning style in VR.
 /// </summary>
+[System.Serializable]
 public enum TurnStyle
 {
     /// <summary>
@@ -316,6 +253,7 @@ public enum TurnStyle
 /// <summary>
 /// Defines options for the user's locomotion style in VR.
 /// </summary>
+[System.Serializable]
 public enum LocomotionStyle
 {
     /// <summary>
@@ -332,6 +270,7 @@ public enum LocomotionStyle
 /// <summary>
 /// Defines the source used to determine the user's movement direction in VR.
 /// </summary>
+[System.Serializable]
 public enum MovementDirectionSource
 {
     /// <summary>
