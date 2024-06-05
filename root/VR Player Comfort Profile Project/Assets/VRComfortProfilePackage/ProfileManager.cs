@@ -59,8 +59,22 @@ public class ProfileManager
         VRPlayerComfortProfile newProfile = new(m_profileVersion, nameOfProfile, savedMovement, savedVisuals, savedOther);
         try
         {
+
             string filePath = Path.Combine(m_profileFolderPath, nameOfProfile + ".json");
 
+            //if we try to generate a profile with the same name, create a new version add add a (#) next to it to denote a new version
+            if (System.IO.File.Exists(filePath))
+            {
+                int counter = 1;
+                while (System.IO.File.Exists(filePath))
+                {
+                    nameOfProfile = $"{nameOfProfile}({counter})";
+                    filePath = Path.Combine(m_profileFolderPath, nameOfProfile + ".json");
+                    counter++;
+                }
+            }
+
+            //now, write the data to a json file
             using (StreamWriter writer = new StreamWriter(filePath))
             {
                 //write data to json
