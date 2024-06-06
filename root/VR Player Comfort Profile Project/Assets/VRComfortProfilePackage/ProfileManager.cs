@@ -8,16 +8,6 @@ using UnityEngine;
 [System.Serializable]
 public class ProfileManager
 {
-    [SerializeField]
-    private string m_profileFolderPath = Application.streamingAssetsPath;
-    public string ProfileFolderPath
-    {
-        get
-        {
-            return m_profileFolderPath;
-        }
-    }
-
     // 6/5/24 : New Version, bumping to 1.1.0
     private Version m_profileVersion = new Version(1, 1, 0);
     public Version ProfileVersion
@@ -59,28 +49,20 @@ public class ProfileManager
         VRPlayerComfortProfile newProfile = new(m_profileVersion, nameOfProfile, savedMovement, savedVisuals, savedOther);
         try
         {
+            //check for existing file name before continuing. if it exists, create a new name by tacking on a (#)
             string fileName;
             Debug.Log(nameOfProfile);
-            if (File.Exists(m_profileFolderPath + "/" + nameOfProfile + ".json"))
+            if (File.Exists(ProfileSetup.ProfileFolderPath + "/" + nameOfProfile + ".json"))
             {
-                fileName = GetNextFilename(nameOfProfile, m_profileFolderPath);
+                fileName = GenericSerialization.GetNextFilename(nameOfProfile, ProfileSetup.ProfileFolderPath);
                 Debug.Log(fileName);
             }
             else
             {
                 fileName = nameOfProfile + ".json";
             }
-            string filePath = Path.Combine(m_profileFolderPath, fileName);
-            //now, write the data to a json file
-            using (StreamWriter writer = new StreamWriter(filePath))
-            {
-                //write data to json
-                string jsonData = JsonConvert.SerializeObject(newProfile, Formatting.Indented);
-                writer.Write(jsonData);
-                writer.Close();
-                //logging just in case
-                Debug.Log($"Created profile at {filePath}");
-            }
+            //use custom class to serialize to file :)
+            GenericSerialization.SerializeToJson(newProfile, ProfileSetup.ProfileFolderPath, fileName);
         }
         //gotta have error handling
         catch (IOException e)
@@ -94,7 +76,7 @@ public class ProfileManager
     public List<string> RetrieveAllProfilesOnDevice()
     {
         List<string> ProfileFilePaths = new List<string>();
-        ProfileFilePaths = GetFilesInFolder(m_profileFolderPath);
+        ProfileFilePaths = GenericSerialization.GetFilesInFolder(ProfileSetup.ProfileFolderPath);
         //come back to this later and confirm it
         return ProfileFilePaths;
     }
@@ -123,71 +105,12 @@ public class ProfileManager
     private bool ParseProfile(string ProfilePath, out VRPlayerComfortProfile output)
     {
         VRPlayerComfortProfile profile;//profile we will store the output in
-        try
-        {
-            //read text
-            string jsonData = File.ReadAllText(ProfilePath);//we know this works
-            Debug.Log(jsonData);
-            try
-            {
-                profile = JsonConvert.DeserializeObject<VRPlayerComfortProfile>(jsonData)!;
-
-                //for debugging serialization and to confirm process
-                if (profile != null)
-                {
-                    Debug.Log("Profile deserialized successfully!");
-                }
-                else
-                {
-                    Debug.Log("Deserialization failed!");
-
-                }
-
-                //output
-                output = profile;
-                return true;
-            }
-            catch (JsonException e)
-            {
-                Debug.LogError("Error deserializing profile: " + e.Message);
-                output = null;
-                return false;
-            }
-        }
-        catch (IOException e)
-        {
-            Debug.LogError("Error creating profile: " + e.Message);
-            output = null;
-            return false;
-        }
+        bool confirmation = GenericSerialization.DeSerializeJsonToType(ProfilePath, out profile);
+        output = profile;
+        return confirmation;
     }
 
-    private static List<string> GetFilesInFolder(string folderPath)
-    {
-        if (Directory.Exists(folderPath))
-        {
-            return Directory.GetFiles(folderPath).ToList();
-        }
-        else
-        {
-            Console.WriteLine($"Error: Folder not found at {folderPath}");
-            return new List<string>();
-        }
-    }
-
-    private string GetNextFilename(string filename, string filePath)
-    {
-        int counter = 1;
-        string newFilename = filename + " ({0})";  // Use newFilename to avoid confusion
-
-        while (File.Exists(Path.Combine(filePath, string.Format(newFilename, counter) + ".json")))
-        {
-            counter++;
-            Debug.Log(newFilename);
-        }
-
-        return Path.Combine(filePath, string.Format(newFilename, counter) + ".json");
-    }
+    
 
     #endregion
 }

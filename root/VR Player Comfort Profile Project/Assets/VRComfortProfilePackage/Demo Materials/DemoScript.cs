@@ -15,7 +15,7 @@ public class DemoScript : MonoBehaviour
         if (GUILayout.Button("Load Profile"))
         {
             Debug.Log("loading profile");
-            manager.TryParseProfile(manager.ProfileFolderPath + "/Test1.json");
+            manager.TryParseProfile(ProfileSetup.ProfileFolderPath + "/Test1.json");
         }
     }
 }
