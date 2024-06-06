@@ -1,86 +1,51 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using UnityEngine;
 
 [System.Serializable]
 public class VRPlayerComfortProfile
 {
     /// <summary>
-    /// (Private) The profile version (major, minor, patch). Defaults to (1.0, 0.0, 0.0) in case of failure.
+    /// The profile version (major, minor, patch). Defaults to (1.0, 0.0, 0.0) in case of failure.
     /// </summary>
     [SerializeField]
-    private Version m_profileVersion = new Version(1, 1, 0);
-    public Version ProfileVersion
-    {
-        get
-        {
-            return m_profileVersion;
-        }
-    }
+    [JsonProperty("ProfileVersion")]
+    public Version ProfileVersion { get; private set; }
 
     /// <summary>
     /// A unique identifier for the profile.
     /// </summary>
     [SerializeField]
-    private Guid m_profileID;
-    public Guid ProfileID
-    {
-        get
-        {
-            return m_profileID;
-        }
-    }
+    [JsonProperty("ProfileID")]
+    public Guid ProfileID { get; private set; }
 
     /// <summary>
     /// A custom Name for the Profile.
     /// </summary>
     [SerializeField]
-    private string m_profileName;
-    public string ProfileName
-    {
-        get
-        {
-            return m_profileName;
-        }
-    }
+    [JsonProperty("ProfileName")]
+    public string ProfileName { get; private set; }
 
     /// <summary>
     /// An instance of the <see cref="Movement"/> class, containing settings related to movement and turning.
     /// </summary>
     [SerializeField]
-    private Movement m_movement;
-    public Movement MovementData
-    {
-        get
-        {
-            return m_movement;
-        }
-    }
+    [JsonProperty("MovementData")]
+    public Movement MovementData { get; private set; }
 
     /// <summary>
     /// An instance of the <see cref="Visuals"/> class, containing settings related to visual appearance.
     /// </summary>
     [SerializeField]
-    private Visuals m_visuals;
-    public Visuals VisualData
-    {
-        get
-        {
-            return m_visuals;
-        }
-    }
+    [JsonProperty("Visuals")]
+    public Visuals VisualData { get; private set; }
 
     /// <summary>
     /// An instance of the <see cref="Other"/> class, containing miscellaneous settings.
     /// </summary>
     [SerializeField]
-    private Other m_other;
-    public Other OtherData
-    {
-        get
-        {
-            return m_other;
-        }
-    }
+    [JsonProperty("Other")]
+    public Other OtherData { get; private set; }
 
     /// <summary>
     /// Nested class representing movement and turning settings within a VR Player Comfort Profile.
@@ -303,12 +268,12 @@ public class VRPlayerComfortProfile
     /// <param name="other">An instance of the Other class containing miscellaneous settings.</param>
     public VRPlayerComfortProfile(Version profileVersion = default, string ProfileName = "", Movement movement = null, Visuals visuals = null, Other other = null)
     {
-        this.m_profileVersion = profileVersion; //version is passed so we can update future items
-        this.m_profileID = Guid.NewGuid(); //generate a new GUID
-        this.m_profileName = ProfileName; //name is required
-        this.m_movement = movement ?? new Movement(); // Use default Movement if not provided
-        this.m_visuals = visuals ?? new Visuals(); // Use default Visuals if not provided
-        this.m_other = other ?? new Other(); // Use default Other if not provided
+        this.ProfileVersion = profileVersion; //version is passed so we can update future items
+        this.ProfileID = Guid.NewGuid(); //generate a new GUID
+        this.ProfileName = ProfileName; //name is required
+        this.MovementData = movement ?? new Movement(); // Use default Movement if not provided
+        this.VisualData = visuals ?? new Visuals(); // Use default Visuals if not provided
+        this.OtherData = other ?? new Other(); // Use default Other if not provided
     }
 
     /// <summary>
@@ -319,13 +284,15 @@ public class VRPlayerComfortProfile
     /// <param name="ProfileName">The name of the Profile as a string.</param>
     public VRPlayerComfortProfile(Version profileVersion, string ProfileName)
     {
-        this.m_profileVersion = profileVersion;
-        this.m_profileName = ProfileName;
-        this.m_profileID = Guid.NewGuid();
-        this.m_movement = new Movement();
-        this.m_visuals = new Visuals();
-        this.m_other = new Other();
+        this.ProfileVersion = profileVersion;
+        this.ProfileName = ProfileName;
+        this.ProfileID = Guid.NewGuid();
+        this.MovementData = new Movement();
+        this.VisualData = new Visuals();
+        this.OtherData = new Other();
     }
+
+    public VRPlayerComfortProfile() { }
 }
 
 /// <summary>

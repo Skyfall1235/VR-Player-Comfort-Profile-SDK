@@ -18,14 +18,14 @@ public class ProfileManager
         }
     }
 
-
-
     // 6/5/24 : New Version, bumping to 1.1.0
     private Version m_profileVersion = new Version(1, 1, 0);
     public Version ProfileVersion
     {
         get => m_profileVersion;
     }
+
+    #region Create Profile Overrides
 
     /// <summary>
     /// This method appears to be redundant and calls the overloaded version with the same parameter.
@@ -89,6 +89,8 @@ public class ProfileManager
         }
     }
 
+    #endregion
+
     public List<string> RetrieveAllProfilesOnDevice()
     {
         List<string> ProfileFilePaths = new List<string>();
@@ -97,34 +99,70 @@ public class ProfileManager
         return ProfileFilePaths;
     }
 
-
     public string RetrieveSpecifiedProfile(string nameOfProfile)
     {
         return null;
     }
 
-    public void ParseProfile(string ProfilePath)
+    public VRPlayerComfortProfile TryParseProfile(string ProfilePath)
     {
+        VRPlayerComfortProfile parsedProfile;
+        bool confirmation = ParseProfile(ProfilePath, out parsedProfile);
+        if(confirmation)
+        {
+            return parsedProfile;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    #region Internal execution
+
+    private bool ParseProfile(string ProfilePath, out VRPlayerComfortProfile output)
+    {
+        VRPlayerComfortProfile profile;//profile we will store the output in
         try
         {
             //read text
-            string jsonData = File.ReadAllText(ProfilePath);
-            //deserialize
-            VRPlayerComfortProfile profile = JsonConvert.DeserializeObject<VRPlayerComfortProfile>(jsonData);
-            //save in the instanced profile for access  
-            InstancedProfile instance = GameObject.FindObjectOfType<InstancedProfile>();
-            if (instance != null)
+            string jsonData = File.ReadAllText(ProfilePath);//we know this works
+            Debug.Log(jsonData);
+            try
             {
-                instance.SelectedProfile = profile;
+                profile = JsonConvert.DeserializeObject<VRPlayerComfortProfile>(jsonData)!;
+
+                //for debugging serialization and to confirm process
+                if (profile != null)
+                {
+                    Debug.Log("Profile deserialized successfully!");
+                }
+                else
+                {
+                    Debug.Log("Deserialization failed!");
+
+                }
+
+                //output
+                output = profile;
+                return true;
+            }
+            catch (JsonException e)
+            {
+                Debug.LogError("Error deserializing profile: " + e.Message);
+                output = null;
+                return false;
             }
         }
         catch (IOException e)
         {
             Debug.LogError("Error creating profile: " + e.Message);
+            output = null;
+            return false;
         }
     }
 
-    public static List<string> GetFilesInFolder(string folderPath)
+    private static List<string> GetFilesInFolder(string folderPath)
     {
         if (Directory.Exists(folderPath))
         {
@@ -150,5 +188,7 @@ public class ProfileManager
 
         return Path.Combine(filePath, string.Format(newFilename, counter) + ".json");
     }
+
+    #endregion
 }
 

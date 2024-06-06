@@ -7,5 +7,5 @@ public class InstancedProfile : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
     [SerializeField]
-    public VRPlayerComfortProfile SelectedProfile;
+    public VRPlayerComfortProfile SelectedProfile = null;
 }
