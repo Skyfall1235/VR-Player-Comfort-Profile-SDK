@@ -1,14 +1,14 @@
 {
   "ProfileVersion": {
-    "Major": 1,
-    "Minor": 1,
-    "SubMinor": 0
+    "Major": 5,
+    "Minor": 7,
+    "SubMinor": 1
   },
-  "ProfileID": "09c584d6-185b-4954-9515-258919ca7395",
+  "ProfileID": "fc6bb37b-a556-4bba-9c68-841ae95fcd4a",
   "ProfileName": "Test1",
   "MovementData": {
     "turnStyle": 1,
-    "turnDegrees": 15.0,
+    "turnDegrees": 100.0,
     "turnDegreePerSecond": 30.0,
     "locomotionStyle": 1,
     "movementDirectionSource": 2,
@@ -21,16 +21,16 @@
   },
   "VisualData": {
     "UseVignette": true,
-    "VignetteRadius": 0.0,
-    "minimumSizeFont": 10.0,
-    "maximumSizeFont": 24.0,
-    "VignetteIntensity": 1.0,
-    "VignetteSensitivity": 0.0
+    "VignetteRadius": 5.0,
+    "minimumSizeFont": 2.0,
+    "maximumSizeFont": 14.0,
+    "VignetteIntensity": 0.1,
+    "VignetteSensitivity": 1.0
   },
   "OtherData": {
-    "ShowSubtitles": false,
+    "ShowSubtitles": true,
     "HapticFeedbackIntensity": 1.0,
-    "ToggleGrip": false,
-    "SwapTriggerAndGrip": false
+    "ToggleGrip": true,
+    "SwapTriggerAndGrip": true
   }
 }

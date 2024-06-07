@@ -45,6 +45,15 @@ public static class ProfileSetup
     private static string m_streamingAssetPath = Application.streamingAssetsPath + "/VRComfortProfileData"; // where the profile pointer is stored
 
     /// <summary>
+    /// Creates the asset path needed for storage of profile locations
+    /// </summary>
+    public static void CreateAssetPathDirectory()
+    {
+        //creat the folder for profile data locations
+        Directory.CreateDirectory(m_streamingAssetPath);
+    }
+
+    /// <summary>
     /// Sets up the location for storing VR player comfort profiles.
     /// </summary>
     /// <param name="profileFolderPath">The path to the folder where VR player comfort profiles will be stored.</param>
@@ -56,6 +65,7 @@ public static class ProfileSetup
     /// </remarks>
     public static void Setup(string profileFolderPath)
     {
+        
         //we save the location to the streaming assets folder
         SerializeProfileLocations(profileFolderPath);
     }
@@ -70,6 +80,8 @@ public static class ProfileSetup
             GenericSerialization.SerializeToJson(profileLocation, m_streamingAssetPath, "ProfileJsonLocation");
         }
     }
+
+    
 
     /// <summary>
     /// Used to store the location of profiles, whether created from this game or any other.
