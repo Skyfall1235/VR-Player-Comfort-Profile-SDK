@@ -65,7 +65,6 @@ public static class ProfileSetup
     /// </remarks>
     public static void Setup(string profileFolderPath)
     {
-        
         //we save the location to the streaming assets folder
         SerializeProfileLocations(profileFolderPath);
     }

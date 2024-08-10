@@ -1,14 +1,12 @@
-using System;
 using System.IO;
-using System.Linq;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using UnityEngine;
 
 [System.Serializable]
 public class ProfileManager
 {
     // 6/5/24 : New Version, bumping to 1.1.0
+    [SerializeField]
     private Version m_profileVersion = new Version(1, 1, 0);
     public Version ProfileVersion
     {
@@ -75,7 +73,7 @@ public class ProfileManager
 
     public List<string> RetrieveAllProfilesOnDevice()
     {
-        List<string> ProfileFilePaths = new List<string>();
+        List<string> ProfileFilePaths;
         ProfileFilePaths = GenericSerialization.GetFilesInFolder(ProfileSetup.ProfileFolderPath);
         //come back to this later and confirm it
         return ProfileFilePaths;

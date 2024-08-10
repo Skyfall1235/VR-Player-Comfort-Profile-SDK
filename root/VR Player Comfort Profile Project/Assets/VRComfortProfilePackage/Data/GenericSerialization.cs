@@ -21,7 +21,6 @@ public static class GenericSerialization
     /// </remarks>
     public static void SerializeToJson<T>(T objectToSerialize, string path, string fileName)
     {
-
         try
         {
             string filePath = Path.Combine(path, fileName); //creates the file in the folder for the asset path.
